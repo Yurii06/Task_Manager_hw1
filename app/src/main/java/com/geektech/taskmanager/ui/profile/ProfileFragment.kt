@@ -1,18 +1,14 @@
 package com.geektech.taskmanager.ui.profile
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import androidx.navigation.fragment.findNavController
+import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.geektech.taskmanager.R
-import com.geektech.taskmanager.databinding.FragmentNotificationsBinding
 import com.geektech.taskmanager.databinding.FragmentProfileBinding
-import com.geektech.taskmanager.databinding.FragmentTaskBinding
-import de.hdodenhof.circleimageview.CircleImageView
+import com.google.android.material.imageview.ShapeableImageView
 
 
 class ProfileFragment : Fragment() {
@@ -33,9 +29,9 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val profileImage = view.findViewById<CircleImageView>(R.id.image_view_profile)
+        val profileImage = view.findViewById<ShapeableImageView>(R.id.iv_profile_image)
         Glide.with(this)
-            .load(R.drawable.pizza)
+            .load(R.drawable.ic_profile)
             .into(profileImage)
     }
 
