@@ -4,40 +4,61 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.geektech.taskmanager.R
+import com.geektech.taskmanager.data.local.Pref
 import com.geektech.taskmanager.databinding.FragmentProfileBinding
-import com.google.android.material.imageview.ShapeableImageView
 
 
 class ProfileFragment : Fragment() {
 
-    private var _binding: FragmentProfileBinding? = null
+    private lateinit var binding: FragmentProfileBinding
 
-    private val binding get() = _binding!!
+    private val pref: Pref by lazy {
+        Pref(requireContext())
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentProfileBinding.inflate(inflater, container, false)
+        binding = FragmentProfileBinding.inflate(inflater, container, false)
         return binding.root
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val profileImage = view.findViewById<ShapeableImageView>(R.id.iv_profile_image)
-        Glide.with(this)
-            .load(R.drawable.ic_profile)
-            .into(profileImage)
+        Glide.with(requireContext())
+            .load(pref.getImage() ?: R.drawable.ic_profile)
+            .apply(RequestOptions.circleCropTransform())
+            .into(binding.ivProfileImage)
+
+        binding.ivProfileImage.setOnClickListener {
+            fileChooserContract.launch("image/*")
+        }
+
+        binding.etName.setText(pref.getName())
+        binding.btnSaveName.setOnClickListener {
+            pref.saveName(binding.etName.text.toString())
+        }
+
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+    private val fileChooserContract =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { ImageUri ->
+                if (ImageUri != null) {
+                    Glide.with(requireContext())
+                        .load(ImageUri)
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(binding.ivProfileImage)
 
-}
+                    pref.saveImage(ImageUri.toString())
+                }
+            }
+        }
