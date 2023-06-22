@@ -17,7 +17,6 @@ class TaskAdapter(val longClick: (Task) -> Unit) : Adapter<TaskAdapter.TaskViewH
         notifyDataSetChanged()
     }
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         return TaskViewHolder(
             ItemTaskBinding.inflate(

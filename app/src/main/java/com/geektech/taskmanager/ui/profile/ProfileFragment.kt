@@ -30,24 +30,10 @@ class ProfileFragment : Fragment() {
         return binding.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        Glide.with(requireContext())
-            .load(pref.getImage() ?: R.drawable.ic_profile)
-            .apply(RequestOptions.circleCropTransform())
-            .into(binding.ivProfileImage)
-
-        binding.ivProfileImage.setOnClickListener {
-            fileChooserContract.launch("image/*")
-        }
-
-        binding.etName.setText(pref.getName())
-        binding.btnSaveName.setOnClickListener {
-            pref.saveName(binding.etName.text.toString())
-        }
-
+        initImage()
+        initName()
     }
 
     private val fileChooserContract =
@@ -61,4 +47,21 @@ class ProfileFragment : Fragment() {
                     pref.saveImage(ImageUri.toString())
                 }
             }
+
+    private fun initName(){
+        binding.etName.setText(pref.getName())
+        binding.btnSaveName.setOnClickListener {
+            pref.saveName(binding.etName.text.toString())
         }
+    }
+    private fun initImage(){
+        Glide.with(requireContext())
+            .load(pref.getImage() ?: R.drawable.ic_profile)
+            .apply(RequestOptions.circleCropTransform())
+            .into(binding.ivProfileImage)
+
+        binding.ivProfileImage.setOnClickListener {
+            fileChooserContract.launch("image/*")
+        }
+    }
+}
