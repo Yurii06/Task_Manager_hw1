@@ -39,7 +39,6 @@ class HomeFragment : Fragment() {
         binding.recyclerView.adapter = adapter
     }
 
-
     private fun longClick(task: Task) {
         val alertDialogDelete = AlertDialog.Builder(requireContext())
         alertDialogDelete.setMessage(getString(R.string.delete_title))
