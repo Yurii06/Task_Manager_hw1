@@ -7,40 +7,67 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.geektech.taskmanager.App
+import com.geektech.taskmanager.R
 import com.geektech.taskmanager.databinding.FragmentTaskBinding
 import com.geektech.taskmanager.model.Task
+import com.geektech.taskmanager.ui.home.HomeFragment
 
 class TaskFragment : Fragment() {
-
     private lateinit var binding: FragmentTaskBinding
-
+    private var task: Task? = null
+    private lateinit var data: Task
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentTaskBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.btnSave.setOnClickListener {
-            onSave()
+
+        if (arguments != null) {
+            task = requireArguments().getSerializable(HomeFragment.TASK_KEY) as Task
+        }
+
+        fillEditTexts()
+        buttonHandleClick()
+    }
+
+    private fun fillEditTexts() {
+        if (task != null) {
+            binding.etTitle.setText(task!!.title)
+            binding.etDesc.setText(task!!.desc)
+            binding.btnSave.text = getString(R.string.update)
+        } else {
+            binding.btnSave.text = getString(R.string.save)
         }
     }
 
-    private fun onSave() {
-        val data = Task(
-            title = binding.etTitle.text.toString(),
-            desc = binding.etDesc.text.toString()
-        )
-
-        App.db.taskDao().insert(data)
-        findNavController().navigateUp()
+    private fun buttonHandleClick() {
+        binding.btnSave.setOnClickListener {
+            data = Task(
+                title = binding.etTitle.text.toString(),
+                desc = binding.etDesc.text.toString()
+            )
+            if (task != null) {
+                updateTask()
+            } else {
+                saveTask()
+            }
+            findNavController().navigateUp()
+        }
     }
 
-    companion object {
-        const val TASK_REQUEST = "task.result"
-        const val TASK_KEY = "task.result"
+    private fun saveTask() {
+        task = Task(data.id, data.title, data.desc)
+        App.db.taskDao().insert(task!!)
+    }
+
+    private fun updateTask() {
+        task!!.title = data.title
+        task!!.desc = data.desc
+        App.db.taskDao().update(task!!)
     }
 }

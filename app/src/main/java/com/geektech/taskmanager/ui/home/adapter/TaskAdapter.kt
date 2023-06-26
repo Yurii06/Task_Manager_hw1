@@ -1,5 +1,6 @@
 package com.geektech.taskmanager.ui.home.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.Adapter
@@ -7,10 +8,12 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.geektech.taskmanager.databinding.ItemTaskBinding
 import com.geektech.taskmanager.model.Task
 
-class TaskAdapter(val longClick: (Task) -> Unit) : Adapter<TaskAdapter.TaskViewHolder>() {
+class TaskAdapter(val longClick: (Task) -> Unit, val onClick: (Task) -> Unit) :
+    Adapter<TaskAdapter.TaskViewHolder>() {
 
     private val list = arrayListOf<Task>()
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setTasks(tasks: List<Task>) {
         list.clear()
         list.addAll(tasks)
@@ -27,20 +30,24 @@ class TaskAdapter(val longClick: (Task) -> Unit) : Adapter<TaskAdapter.TaskViewH
         )
     }
 
-    override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
-        holder.bind(list[position])
-    }
-
     override fun getItemCount(): Int = list.size
 
+    override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
+        holder.onBind(list[position])
+    }
+
     inner class TaskViewHolder(private val binding: ItemTaskBinding) : ViewHolder(binding.root) {
-        fun bind(task: Task) = with(binding) {
+        fun onBind(task: Task) = with(binding) {
             tvTitle.text = task.title
             tvDesc.text = task.desc
-            itemView.setOnClickListener {
+            itemView.setOnLongClickListener {
                 longClick(task)
                 false
             }
+            itemView.setOnClickListener {
+                onClick(task)
+            }
         }
     }
+
 }

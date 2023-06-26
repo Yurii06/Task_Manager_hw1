@@ -8,4 +8,6 @@
     <string name="delete_title">Вы действительно хотите удалить эту задачу?</string>
     <string name="delete">Удалить</string>
     <string name="cancel">Отменить</string>
+    <string name="save">Save</string>
+    <string name="update">Обновить</string>
 </resources>
