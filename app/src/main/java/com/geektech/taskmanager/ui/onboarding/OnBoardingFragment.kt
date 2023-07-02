@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.geektech.taskmanager.R
 import com.geektech.taskmanager.data.local.Pref
 import com.geektech.taskmanager.databinding.FragmentOnBoardingBinding
 import com.geektech.taskmanager.ui.onboarding.adapter.OnBoardingAdapter
@@ -38,6 +39,6 @@ class OnBoardingFragment : Fragment() {
 
     private fun onClick() {
         pref.saveSeen()
-        findNavController().navigateUp()
+        findNavController().navigate(R.id.action_to_mobile_navigation)
     }
 }
