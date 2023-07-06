@@ -1,6 +1,7 @@
 package com.geektech.taskmanager
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.navigation.findNavController
@@ -11,6 +12,7 @@ import com.geektech.taskmanager.data.local.Pref
 import com.geektech.taskmanager.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.messaging.FirebaseMessaging
 
 class MainActivity : AppCompatActivity() {
 
@@ -51,6 +53,12 @@ class MainActivity : AppCompatActivity() {
                 navView.isVisible = true
                 supportActionBar?.show()
             }
+        }
+
+        FirebaseMessaging.getInstance().token.addOnSuccessListener {
+            Log.e("ololo", "onCreate: $it")
+        }.addOnFailureListener {
+            Log.e("ololo", "onCreate: $it")
         }
     }
 }
